@@ -8,6 +8,13 @@
 
 using namespace std;
 
+/* Function to swap 2 integers */
+void swap(int *a , int *b)
+{
+  *a = *a + *b;
+  *b = *a - *b;
+  *a = *a - *b;
+}
 /* Function to generate random numbers and store them in a file */
 void generate()
 {
@@ -43,14 +50,9 @@ public void main()
   if (write(STDOUT_FILENO, addr, sb.st_size) != sb.st_size)
     cout << "partial/failed write" << endl;
     
-  /* Reading the file and storing the integers in an array */
-  ifstream in;
-  in.open("random.txt");
-  array = malloc(100000 * sizeof(int));
-  for(int i = 0; i< 100000; i++)
-    in >> array[i];
+  /* Reading the mmap and sorting the integers in the mmap */
+  sort(addr, addr + sb.st_size);
   
-  /* Sorting the integers and storing them in mmap*/
   /* Unmapping the memory map */
   check = munmap(addr, sb.st_size);
   if(check == -1)
