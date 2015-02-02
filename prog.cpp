@@ -21,18 +21,34 @@ void generate()
 }
 public void main()
 {
-  int fd;
+  char *addr;
+  int fd, check;
   struct stat sb;
+  
   /* File initialized with 100,000 random integers */
   generate();
+  
+  /* Opening file */
+  fd = open("random.txt", O_RDONLY)
+  if(fd == -1)
+    cout << "Error in opening the file" << endl;
+    
   /* Obtain the size of the file and use it to specify the size of
   the mapping and the size of the buffer to be written */
   if (fstat(fd, &sb) == -1)
-    cout<< "Error in fstat" << endl;
-  addr = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    cout << "Error in fstat" << endl;
+  addr = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
   if (addr == MAP_FAILED)
-    errExit("mmap");
+    cout << "Error in mmap" << endl;
   if (write(STDOUT_FILENO, addr, sb.st_size) != sb.st_size)
-    fatal("partial/failed write");
+    cout << "partial/failed write" << endl;
+    
+  /* Sorting the integers */
+  
+  
+  /* Unmapping the memory map */
+  check = munmap(addr, sb.st_size);
+  if(check == -1)
+    cout << "Error in munmap" << endl;
   return 0;
 }
