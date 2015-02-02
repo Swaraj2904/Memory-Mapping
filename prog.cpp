@@ -24,12 +24,12 @@ public void main()
   char *addr;
   int fd, check;
   struct stat sb;
-  
+  int *array;
   /* File initialized with 100,000 random integers */
   generate();
   
   /* Opening file */
-  fd = open("random.txt", O_RDONLY)
+  fd = open("random.txt", O_RDWR)
   if(fd == -1)
     cout << "Error in opening the file" << endl;
     
@@ -43,9 +43,14 @@ public void main()
   if (write(STDOUT_FILENO, addr, sb.st_size) != sb.st_size)
     cout << "partial/failed write" << endl;
     
-  /* Sorting the integers */
+  /* Reading the file and storing the integers in an array */
+  ifstream in;
+  in.open("random.txt");
+  array = malloc(100000 * sizeof(int));
+  for(int i = 0; i< 100000; i++)
+    in >> array[i];
   
-  
+  /* Sorting the integers and storing them in mmap*/
   /* Unmapping the memory map */
   check = munmap(addr, sb.st_size);
   if(check == -1)
